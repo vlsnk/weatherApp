@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <meta name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:14,&quot;GENERATE_GETTERS&quot;:false,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src/main/java&quot;,&quot;THEME&quot;:&quot;mytheme&quot;}">
+  <meta name="vaadin-version" content="8.1.5">
+ </head>
+ <body>
+  <vaadin-form-layout primary-style-name="mytheme" size-auto>
+   <vaadin-grid-layout style-name="v-component-group" spacing size-full margin _id="gridLayout">
+    <row>
+     <column></column>
+     <column>
+      <vaadin-label style-name="huge" plain-text _id="headerLabel" :center>
+        Тестовое сетевое приложение 
+      </vaadin-label>
+     </column>
+    </row>
+    <row>
+     <column>
+      <vaadin-panel width="250px" height="290px" _id="weatherBoard" :middle :center>
+       <vaadin-vertical-layout size-full>
+        <vaadin-label style-name="h3" plain-text _id="weatherHeader" :bottom :center>
+          Погода 
+        </vaadin-label>
+        <vaadin-native-select empty-selection-allowed="false" width="209px" data-item-type="java.lang.String" _id="cityName" :center></vaadin-native-select>
+        <vaadin-label width="224px" plain-text _id="todayWeather" :middle>
+          Текущая температура 
+        </vaadin-label>
+        <vaadin-label width="224px" height="45px" plain-text _id="tomorrowWeather" :middle>
+          Температура на завтра 
+        </vaadin-label>
+        <vaadin-native-button height="30px" plain-text _id="updateWeather" :middle :center>
+          Обновить 
+        </vaadin-native-button>
+       </vaadin-vertical-layout>
+      </vaadin-panel>
+     </column>
+     <column>
+      <vaadin-panel width="250px" height="290px" _id="currencyBoard" :middle :center>
+       <vaadin-vertical-layout height="90%">
+        <vaadin-label style-name="h3" height="26px" plain-text _id="currencyHeader" :middle :center :expand>
+          Курс валют 
+        </vaadin-label>
+        <vaadin-grid caption-as-html column-resize-mode="simple" style-name="no-header" header-visible="false" width-full height="77px" data-item-type="my.weatherApp.model.CurrencyRate" selection-mode="none" _id="currencyTable" :center :expand>
+         <table>
+          <colgroup>
+           <col column-id="name" sortable>
+           <col column-id="byuPrice" sortable>
+           <col column-id="salePrice" sortable>
+          </colgroup>
+          <thead></thead>
+          <tbody></tbody>
+         </table>
+        </vaadin-grid>
+        <vaadin-label plain-text></vaadin-label>
+        <vaadin-native-button plain-text _id="updateCurency" :center>
+          Обновить 
+        </vaadin-native-button>
+        <vaadin-label plain-text></vaadin-label>
+       </vaadin-vertical-layout>
+      </vaadin-panel>
+     </column>
+     <column>
+      <vaadin-panel width="250px" height="290px" _id="visitBoard" :middle :center>
+       <vaadin-vertical-layout style-name="huge" size-full>
+        <vaadin-label style-name="h3" height="46px" plain-text _id="visitHeader" :middle :center>
+          Счетчик посещений 
+        </vaadin-label>
+        <vaadin-label primary-style-name="v-label-huge" style-name="huge" plain-text _id="counter" :middle :center>
+          1 
+        </vaadin-label>
+        <vaadin-label plain-text></vaadin-label>
+       </vaadin-vertical-layout>
+      </vaadin-panel>
+     </column>
+    </row>
+    <row>
+     <column>
+      <vaadin-label plain-text _id="dateInfo" :bottom :center>
+        Информация по состоянию на 
+      </vaadin-label>
+     </column>
+     <column></column>
+     <column>
+      <vaadin-label plain-text _id="ipInfo" :bottom :center>
+        Ваш IP: 
+      </vaadin-label>
+     </column>
+    </row>
+   </vaadin-grid-layout>
+  </vaadin-form-layout>
+ </body>
+</html>
