@@ -1,4 +1,4 @@
-v-component-group/**
+/**
  * Checks if a list contains a certain value.
  * 
  * @param {list} $list - the list to check
@@ -11015,8 +11015,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .mytheme .v-label-huge {
-	font-size: 40px;
-	padding: 5px;
+	font-size: 26px;
 }
 
 .mytheme .v-label-bold {
@@ -12507,10 +12506,8 @@ div.v-layout.v-horizontal.v-widget {
 	background: url("images/background.jpg") !important;
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
-
 }
 
-/* All labels have white text on black background */
 .mytheme .v-label-header {
 	color: #867A7A;
 	font-size: 24pt;

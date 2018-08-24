@@ -57,13 +57,13 @@ public class WeatherServiceImpl implements WeatherService{
             try {
                 JSONObject weatherObj = weatherConnector.requestWeather(city.getCode());
                 JSONObject forecastObj = weatherConnector.requestForecast(city.getCode());
-
+                if (weatherObj == null || forecastObj == null){
+                    return sendEmptyWeather(city);
+                }
                 Weather newWeather = WeatherParser.getWeather(weatherObj, forecastObj);
 
                 if (newWeather == null) {
-                    this.weatherMap.remove(city);
-                    errorService.sendMessage(ERR_WEATHER_SERVICE_DISCONNECT);
-                    return new Weather(city.getCode(), "-", "-", LocalDateTime.now().minusDays(1));
+                    return sendEmptyWeather(city);
                 } else {
                     errorService.clearMessage();
                     if (weather == null) weatherDao.addWeather(newWeather);
@@ -86,4 +86,9 @@ public class WeatherServiceImpl implements WeatherService{
         return false;
     }
 
+    Weather sendEmptyWeather(City city){
+        this.weatherMap.remove(city);
+        errorService.sendMessage(ERR_WEATHER_SERVICE_DISCONNECT);
+        return new Weather(city.getCode(), "-", "-", LocalDateTime.now().minusDays(1));
+    }
 }

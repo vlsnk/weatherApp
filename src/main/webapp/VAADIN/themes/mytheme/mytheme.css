@@ -1,0 +1,53 @@
+/*
+Syntax error: File to import not found or unreadable: ../valo/valo.scss.
+              Load path: D:/Idea Projects/tutorial-master/src/main/webapp/VAADIN/themes
+        on line 32 of src/main/webapp/VAADIN/themes/mytheme/mytheme.scss
+
+27: //$v-error-indicator-color: #ed473b;
+28: 
+29: // For more information, see: https://vaadin.com/book/-/page/themes.valo.html
+30: // Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
+31: 
+32: @import "../valo/valo.scss";
+33: 
+34: @mixin mytheme {
+35:   @include valo;
+36: 
+37:   .v-ui-my {
+
+Backtrace:
+src/main/webapp/VAADIN/themes/mytheme/mytheme.scss:32
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/import_node.rb:67:in `import'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/import_node.rb:28:in `imported_file'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/import_node.rb:37:in `css_import?'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/visitors/perform.rb:217:in `visit_import'
+org/jruby/RubyKernel.java:2109:in `send'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/visitors/base.rb:37:in `visit'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/visitors/perform.rb:100:in `visit'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/visitors/base.rb:53:in `visit_children'
+org/jruby/RubyArray.java:2339:in `collect'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/visitors/base.rb:53:in `visit_children'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/visitors/perform.rb:109:in `visit_children'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/visitors/base.rb:37:in `visit'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/visitors/perform.rb:128:in `visit_root'
+org/jruby/RubyKernel.java:2109:in `send'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/visitors/base.rb:37:in `visit'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/visitors/perform.rb:100:in `visit'
+org/jruby/RubyKernel.java:2109:in `send'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/visitors/perform.rb:7:in `visit'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/tree/root_node.rb:20:in `render'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/engine.rb:315:in `_render'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/engine.rb:262:in `render'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/plugin/compiler.rb:341:in `update_stylesheet'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/plugin/compiler.rb:203:in `update_stylesheets'
+org/jruby/RubyArray.java:1620:in `each'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/plugin/compiler.rb:201:in `update_stylesheets'
+file:D:/Users/Elena.Elena-PC/.m2/repository/org/jasig/maven/sass-maven-plugin/1.1.1/sass-maven-plugin-1.1.1.jar!/gems/sass-3.2.8/lib/sass/plugin.rb:81:in `update_stylesheets'
+<script>:21:in `(root)'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Syntax error: File to import not found or unreadable: ../valo/valo.scss.\A               Load path: D:/Idea Projects/tutorial-master/src/main/webapp/VAADIN/themes\A         on line 32 of src/main/webapp/VAADIN/themes/mytheme/mytheme.scss\A \A 27: //$v-error-indicator-color: #ed473b;\A 28: \A 29: // For more information, see: https://vaadin.com/book/-/page/themes.valo.html\A 30: // Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples\A 31: \A 32: @import \"../valo/valo.scss\";\A 33: \A 34: @mixin mytheme {\A 35:   @include valo;\A 36: \A 37:   .v-ui-my {"; }

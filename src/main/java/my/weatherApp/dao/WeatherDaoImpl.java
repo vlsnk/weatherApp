@@ -10,6 +10,7 @@ import java.io.Serializable;
 
 import static com.mongodb.client.model.Filters.eq;
 
+@SuppressWarnings("unchecked")
 public class WeatherDaoImpl implements WeatherDao, Serializable {
 
     static WeatherDaoImpl instance;
