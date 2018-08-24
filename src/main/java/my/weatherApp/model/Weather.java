@@ -4,22 +4,33 @@ import java.time.LocalDateTime;
 
 public class Weather {
 
-    int cityCode;
-    String todayWeather;
-    String tomorrowWeather;
-    LocalDateTime lastUpdate;
+    private int cityCode;
+    private String todayWeather;
+    private String tomorrowWeather;
+    private LocalDateTime lastUpdate;
+
+    public Weather() {
+        this.todayWeather = "-\u00b0C";
+        this.tomorrowWeather = "-\u00b0C";
+    }
+
+    public Weather(City city) {
+        this.cityCode = city.code;
+        this.todayWeather = "-\u00b0C";
+        this.tomorrowWeather = "-\u00b0C";
+    }
 
     public Weather(int cityCode, String todayWeather, String tomorrowWeather, LocalDateTime lastUpdate) {
         this.cityCode = cityCode;
-        this.todayWeather = todayWeather;
-        this.tomorrowWeather = tomorrowWeather;
+        this.todayWeather = todayWeather + "\u00b0C";
+        this.tomorrowWeather = tomorrowWeather + "\u00b0C";
         this.lastUpdate = lastUpdate;
     }
 
     public Weather(int cityCode, String todayWeather, String tomorrowWeather, String lastUpdate) {
         this.cityCode = cityCode;
-        this.todayWeather = todayWeather;
-        this.tomorrowWeather = tomorrowWeather;
+        this.todayWeather = todayWeather + "\u00b0C";
+        this.tomorrowWeather = tomorrowWeather + "\u00b0C";
         this.lastUpdate = LocalDateTime.parse(lastUpdate);
     }
 

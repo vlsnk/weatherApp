@@ -6,5 +6,5 @@ import my.weatherApp.model.Weather;
 public interface WeatherService {
 
     Weather getWeather(City city);
-
+    Weather getEmptyWeather();
 }

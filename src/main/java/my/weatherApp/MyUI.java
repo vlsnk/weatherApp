@@ -2,67 +2,65 @@ package my.weatherApp;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.client.MongoDatabase;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-import my.weatherApp.dao.ClientDaoImpl;
-import my.weatherApp.dao.CurrencyDaoImpl;
-import my.weatherApp.dao.WeatherDaoImpl;
-
-import java.io.InputStream;
-import java.util.Properties;
-
+import com.vaadin.external.org.slf4j.Logger;
+import com.vaadin.external.org.slf4j.LoggerFactory;
+import com.vaadin.server.*;
+import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
+import my.weatherApp.dao.MainMongoDao;
+import my.weatherApp.service.ErrorService;
 
 @Theme("mytheme")
 public class MyUI extends UI {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MyUI.class);
     private DashboardForm dashboardForm = new DashboardForm();
-    private String mytheme = "mytheme";
+    private static final String uitheme = "v-ui-my";
+    private static final String errorTheme = "v-label-error";
+    private ErrorService errorService = ErrorService.getInstance();
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        this.setPrimaryStyleName(mytheme);
+        LOG.info("UI init ");
+        Label errorLabel = new Label();
+        errorLabel.setStyleName(errorTheme);
+        errorService.setLabel(errorLabel);
+
+        setErrorHandler(errorService);
+
         final VerticalLayout layout = new VerticalLayout();
+        layout.setStyleName(uitheme);
+        layout.setSizeFull();
+
         dashboardForm.getDashBoard(vaadinRequest.getRemoteAddr());
-        layout.addComponents(dashboardForm);
+
+        layout.addComponents(dashboardForm, errorLabel);
         layout.setComponentAlignment(dashboardForm, Alignment.MIDDLE_CENTER);
+        layout.setComponentAlignment(errorLabel, Alignment.BOTTOM_CENTER);
+
         setContent(layout);
     }
 
-    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = MyUI.class, productionMode = true)
+    @WebServlet(urlPatterns = { "/*", "/VAADIN/*" }, name = "MyUIServlet", asyncSupported = true)
+    @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
     public static class MyUIServlet extends VaadinServlet {
 
-        private final static String DB = "mongodb://localhost:27017";
-        private final static String DB_NAME = "weatherApp";
-        private MongoClient mongoClient;
-        Properties p = new Properties();
+        private static final Logger LOG = LoggerFactory.getLogger(MyUIServlet.class);
+        private MainMongoDao mongoDao;
 
         @Override
         public void init() throws ServletException {
-            mongoClient = new MongoClient(new MongoClientURI(DB));
-            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
-            initDao(database);
-        }
-
-        static void initDao(MongoDatabase db){
-            ClientDaoImpl.setDB(db);
-            CurrencyDaoImpl.setDB(db);
-            WeatherDaoImpl.setDB(db);
+            LOG.info("Servlet init()");
+            mongoDao = MainMongoDao.getInstance();
         }
 
         @Override
         @SuppressWarnings("all")
         public void destroy(){
             super.destroy();
-            mongoClient.close();
+            mongoDao.close();
         }
 
     }

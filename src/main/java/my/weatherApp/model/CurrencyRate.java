@@ -4,17 +4,25 @@ import java.io.Serializable;
 
 public class CurrencyRate implements Serializable {
 
-    String name;
-    String byuPrice;
-    String salePrice;
+    private final static String RUB = "\u0584";
+    private final static String def = "-";
+    private String name;
+    private String byuPrice;
+    private String salePrice;
 
     public CurrencyRate() {
     }
 
     public CurrencyRate(String name, String byuPrice, String salePrice) {
         this.name = name;
-        this.byuPrice = byuPrice;
-        this.salePrice = salePrice;
+        this.byuPrice = byuPrice + RUB ;
+        this.salePrice = salePrice + RUB;
+    }
+
+    public CurrencyRate(String name) {
+        this.name = name;
+        this.byuPrice = def + RUB ;
+        this.salePrice = def + RUB;
     }
 
     public String getName() {

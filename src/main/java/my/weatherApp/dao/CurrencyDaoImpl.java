@@ -1,5 +1,6 @@
 package my.weatherApp.dao;
 
+import com.mongodb.MongoSecurityException;
 import com.mongodb.client.*;
 import my.weatherApp.model.CurrencyDto;
 import my.weatherApp.model.CurrencyRate;
@@ -15,7 +16,6 @@ import static com.mongodb.client.model.Filters.eq;
 public class CurrencyDaoImpl implements CurrencyDao, Serializable {
 
     static CurrencyDaoImpl instance;
-    private static MongoDatabase db;
     private static final String NAME = "currency";
     private static final String ID = "_id";
     private static final String SALE = "sale";
@@ -23,9 +23,9 @@ public class CurrencyDaoImpl implements CurrencyDao, Serializable {
     private static final String DATE = "date";
     private static final String DB_SET = "$set";
     private MongoCollection collection;
+    private boolean ready = false;
 
     private CurrencyDaoImpl() {
-        this.collection = db.getCollection(NAME);
     }
 
     public static CurrencyDaoImpl getInstance(){
@@ -35,10 +35,16 @@ public class CurrencyDaoImpl implements CurrencyDao, Serializable {
         return instance;
     }
 
-    public static void setDB(MongoDatabase mongoDatabase){
-        db = mongoDatabase;
+    public void setDB(MongoDatabase mongoDatabase){
+        this.collection = mongoDatabase.getCollection(NAME);
+        ready = true;
     }
 
+
+    @Override
+    public boolean isReady() {
+        return ready;
+    }
 
     @Override
     public void addCurrency(CurrencyDto currencyDto) {
@@ -50,7 +56,7 @@ public class CurrencyDaoImpl implements CurrencyDao, Serializable {
     }
 
     @Override
-    public CurrencyDto getCurrency() {
+    public CurrencyDto getCurrency() throws MongoSecurityException {
         List<CurrencyRate> currencyRates = new ArrayList<>();
         MongoCursor list = collection.find().iterator();
         String date = null;

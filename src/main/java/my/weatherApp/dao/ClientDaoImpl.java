@@ -3,6 +3,7 @@ package my.weatherApp.dao;
 import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
 import my.weatherApp.model.Visitor;
 import org.bson.Document;
 
@@ -10,15 +11,16 @@ import java.io.Serializable;
 
 public class ClientDaoImpl implements ClientDao, Serializable {
 
-    static ClientDaoImpl instance;
-    private static MongoDatabase db;
+    private static ClientDaoImpl instance;
     private static final String NAME = "visitor";
     private static final String ID = "_id";
     private static final String COUNT = "count";
+    private static final String INC = "$inc";
     private MongoCollection collection;
+    private boolean ready = false;
 
     private ClientDaoImpl() {
-        this.collection = db.getCollection(NAME);
+
     }
 
     public static ClientDaoImpl getInstance(){
@@ -28,41 +30,53 @@ public class ClientDaoImpl implements ClientDao, Serializable {
         return instance;
     }
 
-    public static void setDB(MongoDatabase mongoDatabase){
-        db = mongoDatabase;
+    private void init(){
+        Document d = (Document) collection.find().first();
+        if (d == null) {
+            addVisitor(new Visitor());
+        }
+    }
+
+    public void setDB(MongoDatabase mongoDatabase){
+        this.collection = mongoDatabase.getCollection(NAME);
+        collection.find();
+        init();
+        ready = true;
     }
 
     @Override
+    public boolean isReady() {
+        return ready;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public void addVisitor(Visitor visitor) {
         Document visitorDB = getDoc(visitor);
         collection.insertOne(visitorDB);
     }
 
     @Override
-    public Visitor getVisitor(String ip) {
-        Document d = (Document) collection.find(eq(ID, ip)).first();
-        if (d == null){
-            return null;
+    public Visitor getVisitor() {
+        Document result = (Document) collection.findOneAndUpdate(new Document(ID, 1),
+                new Document(INC, new Document(COUNT, 1)));
+        if (result == null){
+            Visitor v = new Visitor();
+            addVisitor(v);
+            return v;
+        } else {
+            Visitor visitor = getVisitor(result);
+            return visitor;
         }
-        Visitor visitor = getVisitor(d);
-        return visitor;
     }
 
-    @Override
-    public void update(Visitor v) {
-        collection.updateOne(eq(ID, v.getIpAddress()),
-                             new Document("$set", new Document(COUNT, v.getCount())));
-    }
-
-    Document getDoc(Visitor v){
-        Document visitorDB = new Document(ID, v.getIpAddress())
-                                        .append(COUNT, v.getCount());
+    private Document getDoc(Visitor v){
+        Document visitorDB = new Document(ID, 1).append(COUNT, v.getCount());
         return visitorDB;
     }
 
-    Visitor getVisitor(Document doc){
-        Visitor visitor = new Visitor(doc.get(ID, String.class),
-                                    doc.getInteger(COUNT, 0));
+    private Visitor getVisitor(Document doc){
+        Visitor visitor = new Visitor(doc.getInteger(COUNT, 1));
         return visitor;
     }
 }

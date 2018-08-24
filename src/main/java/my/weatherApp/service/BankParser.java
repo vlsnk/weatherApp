@@ -1,7 +1,10 @@
 package my.weatherApp.service;
 
+import com.vaadin.external.org.slf4j.Logger;
+import com.vaadin.external.org.slf4j.LoggerFactory;
 import my.weatherApp.model.Currency;
 import my.weatherApp.model.CurrencyRate;
+import my.weatherApp.model.Error;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,27 +16,32 @@ import java.util.List;
 
 public class BankParser {
 
+    private static final Logger LOG = LoggerFactory.getLogger(BankParser.class);
     private final static String URL = "https://www.sravni.ru/bank/sberbank-rossii/valjuty/moskva/";
     private final static String USD_ATTR = "/bank/sberbank-rossii/valjuty/usd/";
     private final static String EUR_ATTR = "/bank/sberbank-rossii/valjuty/eur/";
     private static boolean isFound = false;
     static List<CurrencyRate> list;
+    private static final String SERVICE_NAME = "CURRENCY";
+    private static final ErrorService errorService = ErrorService.getInstance();
 
     static List<CurrencyRate> getCurrency(){
         List<CurrencyRate> newList = new ArrayList<>();
             try {
                 isFound = false;
-                Document doc = Jsoup.connect(URL).timeout(5000).get();
+                Document doc = Jsoup.connect(URL).timeout(30000).get();
                 Element table = findTable(doc.children());
                 if (table != null) {
                     newList = parseTable(table);
                 } else {
-                    newList.add(new CurrencyRate(Currency.USD.toString(), "-", "-"));
-                    newList.add(new CurrencyRate(Currency.EUR.toString(), "-", "-"));
+                    newList = fillDefault();
                 }
                 list = newList;
             } catch (IOException e) {
-                e.printStackTrace();
+                Error error = new Error(SERVICE_NAME, e.toString(), e);
+                LOG.error(error.toString());
+                errorService.error(error);
+//                list = fillDefault();
             }
         return list;
     }
@@ -86,6 +94,13 @@ public class BankParser {
         String salePrice = tds.get(2).textNodes().get(0).text();
         currencyRate.setSalePrice(salePrice);
         return currencyRate;
+    }
+
+    static List<CurrencyRate> fillDefault(){
+        List<CurrencyRate> newList = new ArrayList<>();
+        newList.add(new CurrencyRate(Currency.USD.toString(), "-", "-"));
+        newList.add(new CurrencyRate(Currency.EUR.toString(), "-", "-"));
+        return newList;
     }
 
 }

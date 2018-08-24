@@ -14,7 +14,6 @@ import static com.mongodb.client.model.Filters.eq;
 public class WeatherDaoImpl implements WeatherDao, Serializable {
 
     static WeatherDaoImpl instance;
-    private static MongoDatabase db;
     private static final String NAME = "weather";
     private static final String ID = "_id";
     private static final String TODAY = "today";
@@ -22,9 +21,9 @@ public class WeatherDaoImpl implements WeatherDao, Serializable {
     private static final String UPDATE = "date";
     private static final String DB_SET = "$set";
     private MongoCollection collection;
+    private boolean ready = false;
 
     private WeatherDaoImpl() {
-        this.collection = db.getCollection(NAME);
     }
 
     public static WeatherDaoImpl getInstance(){
@@ -34,8 +33,14 @@ public class WeatherDaoImpl implements WeatherDao, Serializable {
         return instance;
     }
 
-    public static void setDB(MongoDatabase mongoDatabase){
-        db = mongoDatabase;
+    public void setDB(MongoDatabase mongoDatabase){
+        this.collection = mongoDatabase.getCollection(NAME);
+        ready = true;
+    }
+
+    @Override
+    public boolean isReady() {
+        return ready;
     }
 
     @Override

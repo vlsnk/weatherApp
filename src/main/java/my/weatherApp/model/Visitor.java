@@ -1,20 +1,13 @@
 package my.weatherApp.model;
 
 public class Visitor {
-    String ipAddress;
-    int count;
+    private int count;
 
-    public Visitor(String ipAddress, int count) {
-        this.ipAddress = ipAddress;
+    public Visitor() {
+        this.count = 1;
+    }
+    public Visitor(int count) {
         this.count = count;
-    }
-
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
     }
 
     public int getCount() {

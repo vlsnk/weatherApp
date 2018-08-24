@@ -4,8 +4,8 @@ import my.weatherApp.model.Visitor;
 
 public interface ClientDao {
 
+    boolean isReady();
     void addVisitor(Visitor visitor);
-    Visitor getVisitor(String ip);
-    void update(Visitor v);
+    Visitor getVisitor();
 
 }

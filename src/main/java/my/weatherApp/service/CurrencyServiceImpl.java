@@ -1,5 +1,7 @@
 package my.weatherApp.service;
 
+import com.vaadin.external.org.slf4j.Logger;
+import com.vaadin.external.org.slf4j.LoggerFactory;
 import my.weatherApp.dao.CurrencyDao;
 import my.weatherApp.dao.CurrencyDaoImpl;
 import my.weatherApp.model.Currency;
@@ -8,10 +10,12 @@ import my.weatherApp.model.CurrencyRate;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CurrencyServiceImpl implements CurrencyService, Serializable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CurrencyServiceImpl.class);
     private static CurrencyServiceImpl instance;
     List<CurrencyRate> list;
     LocalDate date = LocalDate.now().minusDays(1);
@@ -37,7 +41,16 @@ public class CurrencyServiceImpl implements CurrencyService, Serializable {
         if (this.list == null || isOld()) {
             requestFromDB();
         }
-        return  this.list;
+        return this.list;
+    }
+
+    @Override
+    public List<CurrencyRate> getEmptyCurrency() {
+        List<CurrencyRate> rates = new ArrayList<>();
+        for (Currency c: Currency.values()) {
+            rates.add(new CurrencyRate(c.name()));
+        }
+        return rates;
     }
 
     void requestFromDB(){
@@ -62,12 +75,16 @@ public class CurrencyServiceImpl implements CurrencyService, Serializable {
 
         this.list = BankParser.getCurrency();
         this.date = LocalDate.now();
-        CurrencyDto newDto = new CurrencyDto(this.list, this.date);
-        if (action.equals(ADD)){
-            currencyDao.addCurrency(newDto);
-        }
-        if (action.equals(UPDATE)){
-            currencyDao.update(newDto);
+        if (this.list == null) {
+            this.list = fillDefault();
+        } else {
+            CurrencyDto newDto = new CurrencyDto(this.list, this.date);
+            if (action.equals(ADD)) {
+                currencyDao.addCurrency(newDto);
+            }
+            if (action.equals(UPDATE)) {
+                currencyDao.update(newDto);
+            }
         }
     }
 
@@ -96,4 +113,10 @@ public class CurrencyServiceImpl implements CurrencyService, Serializable {
         return result;
     }
 
+    private List<CurrencyRate> fillDefault(){
+        List<CurrencyRate> newList = new ArrayList<>();
+        newList.add(new CurrencyRate(Currency.USD.toString(), "-", "-"));
+        newList.add(new CurrencyRate(Currency.EUR.toString(), "-", "-"));
+        return newList;
+    }
 }
