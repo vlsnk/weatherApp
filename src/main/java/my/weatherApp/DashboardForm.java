@@ -26,10 +26,14 @@ public class DashboardForm extends Weather {
     private static final String DATE = "По состоянию на ";
     private static final String TODAY_WEATHER = "Текущая температура ";
     private static final String TOMORROW_WEATHER = "Температура на завтра ";
+    private static final String SERVICE_NAME = "DASHBOARD";
+    private static final String SERVICE_WEATHER = "WEATHER";
+    private static final String SERVICE_CURRENCY = "CURRENCY";
 
 
     public DashboardForm(){
         currencyTable.setItems(currencyService.getEmptyCurrency());
+
         cityName.setItems(City.getNames());
         cityName.setValue(City.NOVOSIBIRSK.getName());
         cityName.setSelectedItem(City.NOVOSIBIRSK.getName());
@@ -39,17 +43,21 @@ public class DashboardForm extends Weather {
                 cityName.setValue(valueChangeEvent.getValue());
             }
         });
+
         my.weatherApp.model.Weather w = weatherService.getEmptyWeather();
         todayWeather.setValue(TODAY_WEATHER + w.getTodayWeather());
         tomorrowWeather.setValue(TOMORROW_WEATHER + w.getTomorrowWeather());
+
         updateWeather.addClickListener(e -> {
-            errorService.clearMessage();
+            errorService.clearMessage(SERVICE_WEATHER);
             updateWeather();
         });
+
         updateCurency.addClickListener(e -> {
-            errorService.clearMessage();
+            errorService.clearMessage(SERVICE_CURRENCY);
             updateCurrency();
         });
+        errorService.fillError();
     }
 
     void getDashBoard(String ip){
@@ -58,32 +66,27 @@ public class DashboardForm extends Weather {
         updateCount();
         updateCurrency();
         updateWeather();
+        errorService.fillError();
     }
 
     void updateWeather(){
-        updateErrors();
         String s = cityName.getSelectedItem().get();
         City n = City.getCity(s);
         my.weatherApp.model.Weather w = weatherService.getWeather(n);
         todayWeather.setValue(TODAY_WEATHER + w.getTodayWeather());
         tomorrowWeather.setValue(TOMORROW_WEATHER + w.getTomorrowWeather());
+        updateErrors();
     }
 
     void updateCurrency(){
-        updateErrors();
         List<CurrencyRate> rate = currencyService.getCurrency();
         currencyTable.setItems(rate);
+        updateErrors();
     }
 
     void updateCount(){
         Visitor v = visitorService.getInfo();
         int result = v.getCount();
-//        if (result == 0) {
-//
-//            String msg = "Error to get information about visitors count";
-//            errorService.error(msg);
-//            LOG.error(msg);
-//        }
         counter.setValue(String.valueOf(result));
     }
 

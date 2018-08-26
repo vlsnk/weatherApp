@@ -4,7 +4,6 @@ import com.mongodb.*;
 import com.mongodb.client.MongoDatabase;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
-import com.vaadin.server.ErrorEvent;
 import my.weatherApp.model.Error;
 import my.weatherApp.service.ErrorService;
 
@@ -32,7 +31,7 @@ public class MainMongoDao implements MainDao {
     private static String serverAddress = "localhost";
     private static final String  PORT = "PORT";
     private static int port = 27017;
-    private static  final String PROPERTIES_FILE = "database.properties";
+    private static final String PROPERTIES_FILE = "database.properties";
     private MongoClient client;
     private ErrorService errorService = ErrorService.getInstance();
     private ClientDaoImpl clientDao = ClientDaoImpl.getInstance();
@@ -62,8 +61,10 @@ public class MainMongoDao implements MainDao {
                 currencyDao.setDB(db);
                 weatherDao.setDB(db);
             } catch (MongoException m) {
-                LOG.error("Error %s occure while initialize mongodb connection", m.toString());
-                errorService.error(new ErrorEvent(m));
+                String msg = String.format("Error %s occur while initialize mongodb connection", m.toString());
+                Error error = new Error(SERVICE_NAME, msg, m);
+                LOG.error(error.toString());
+                errorService.error(error);
             }
         }
 

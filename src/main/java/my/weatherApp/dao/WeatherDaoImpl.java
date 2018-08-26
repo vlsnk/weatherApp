@@ -2,7 +2,10 @@ package my.weatherApp.dao;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.vaadin.external.org.slf4j.Logger;
+import com.vaadin.external.org.slf4j.LoggerFactory;
 import my.weatherApp.model.City;
+import my.weatherApp.model.LogEvent;
 import my.weatherApp.model.Weather;
 import org.bson.Document;
 
@@ -13,6 +16,8 @@ import static com.mongodb.client.model.Filters.eq;
 @SuppressWarnings("unchecked")
 public class WeatherDaoImpl implements WeatherDao, Serializable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CurrencyDaoImpl.class);
+    private static final String SERVICE_NAME = "DATABASE";
     static WeatherDaoImpl instance;
     private static final String NAME = "weather";
     private static final String ID = "_id";
@@ -24,6 +29,7 @@ public class WeatherDaoImpl implements WeatherDao, Serializable {
     private boolean ready = false;
 
     private WeatherDaoImpl() {
+        LOG.info(LogEvent.create(SERVICE_NAME, "Create WeatherDaoImpl"));
     }
 
     public static WeatherDaoImpl getInstance(){
@@ -77,10 +83,10 @@ public class WeatherDaoImpl implements WeatherDao, Serializable {
     }
 
     Weather getWeatherFromDoc(Document doc){
-        Weather weather = new Weather(doc.getInteger(ID, 0),
-                doc.getString(TODAY),
-                doc.getString(TOMORROW),
-                doc.getString(UPDATE));
+        Weather weather = new Weather(doc.getInteger(ID, 0));
+        weather.setTodayWeather(doc.getString(TODAY));
+        weather.setTomorrowWeather(doc.getString(TOMORROW));
+        weather.setLastUpdate(doc.getString(UPDATE));
         return weather;
     }
 }

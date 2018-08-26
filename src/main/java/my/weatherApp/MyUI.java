@@ -24,10 +24,9 @@ public class MyUI extends UI {
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         LOG.info("UI init ");
-        Label errorLabel = new Label();
+        Label errorLabel = errorService.getLabel();
         errorLabel.setStyleName(errorTheme);
-        errorService.setLabel(errorLabel);
-
+        errorLabel.setWidth(dashboardForm.getWidth(), dashboardForm.getWidthUnits());
         setErrorHandler(errorService);
 
         final VerticalLayout layout = new VerticalLayout();

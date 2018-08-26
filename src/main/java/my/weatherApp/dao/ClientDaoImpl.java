@@ -4,6 +4,9 @@ import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
+import com.vaadin.external.org.slf4j.Logger;
+import com.vaadin.external.org.slf4j.LoggerFactory;
+import my.weatherApp.model.LogEvent;
 import my.weatherApp.model.Visitor;
 import org.bson.Document;
 
@@ -11,6 +14,8 @@ import java.io.Serializable;
 
 public class ClientDaoImpl implements ClientDao, Serializable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CurrencyDaoImpl.class);
+    private static final String SERVICE_NAME = "DATABASE";
     private static ClientDaoImpl instance;
     private static final String NAME = "visitor";
     private static final String ID = "_id";
@@ -20,7 +25,7 @@ public class ClientDaoImpl implements ClientDao, Serializable {
     private boolean ready = false;
 
     private ClientDaoImpl() {
-
+        LOG.info(LogEvent.create(SERVICE_NAME, "Create ClientDaoImpl"));
     }
 
     public static ClientDaoImpl getInstance(){

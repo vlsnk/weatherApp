@@ -20,6 +20,10 @@ public class Weather {
         this.tomorrowWeather = "-\u00b0C";
     }
 
+    public Weather(int cityCode){
+        this.cityCode = cityCode;
+    }
+
     public Weather(int cityCode, String todayWeather, String tomorrowWeather, LocalDateTime lastUpdate) {
         this.cityCode = cityCode;
         this.todayWeather = todayWeather + "\u00b0C";
@@ -66,6 +70,9 @@ public class Weather {
         this.lastUpdate = lastUpdate;
     }
 
+    public void setLastUpdate(String lastUpdate){
+        this.lastUpdate = LocalDateTime.parse(lastUpdate);
+    }
     @Override
     public String toString() {
         return "WeatherService{" +

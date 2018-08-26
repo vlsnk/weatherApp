@@ -2,8 +2,11 @@ package my.weatherApp.dao;
 
 import com.mongodb.MongoSecurityException;
 import com.mongodb.client.*;
+import com.vaadin.external.org.slf4j.Logger;
+import com.vaadin.external.org.slf4j.LoggerFactory;
 import my.weatherApp.model.CurrencyDto;
 import my.weatherApp.model.CurrencyRate;
+import my.weatherApp.model.LogEvent;
 import org.bson.Document;
 
 import java.io.Serializable;
@@ -15,6 +18,8 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class CurrencyDaoImpl implements CurrencyDao, Serializable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CurrencyDaoImpl.class);
+    private static final String SERVICE_NAME = "DATABASE";
     static CurrencyDaoImpl instance;
     private static final String NAME = "currency";
     private static final String ID = "_id";
@@ -26,6 +31,7 @@ public class CurrencyDaoImpl implements CurrencyDao, Serializable {
     private boolean ready = false;
 
     private CurrencyDaoImpl() {
+        LOG.info(LogEvent.create(SERVICE_NAME, "Create CurrencyDaoImpl"));
     }
 
     public static CurrencyDaoImpl getInstance(){
@@ -39,7 +45,6 @@ public class CurrencyDaoImpl implements CurrencyDao, Serializable {
         this.collection = mongoDatabase.getCollection(NAME);
         ready = true;
     }
-
 
     @Override
     public boolean isReady() {
@@ -88,7 +93,6 @@ public class CurrencyDaoImpl implements CurrencyDao, Serializable {
                                 .append(BUY, c.getByuPrice())
                                 .append(SALE, c.getSalePrice())
                                 .append(DATE, date.toString());
-        System.out.println(currencyDB);
         return currencyDB;
     }
 
