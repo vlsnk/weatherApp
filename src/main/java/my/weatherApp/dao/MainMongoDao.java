@@ -52,6 +52,10 @@ public class MainMongoDao implements MainDao {
         return instance;
     }
 
+    /**
+     * Initialize all Dao objects
+     */
+    @Override
     public void init(){
         if (client == null) {
             try {
@@ -74,6 +78,10 @@ public class MainMongoDao implements MainDao {
         client.close();
     }
 
+    /**
+     * Create client
+     * @return
+     */
     private MongoClient createClient(){
         loadProperties();
 
@@ -97,6 +105,9 @@ public class MainMongoDao implements MainDao {
         return client;
     }
 
+    /**
+     * Load properties from file
+     */
     private void loadProperties(){
         Properties p = new Properties();
         try (InputStream stream = MainMongoDao.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE)) {

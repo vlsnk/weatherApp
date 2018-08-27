@@ -51,17 +51,17 @@ public class CurrencyServiceImpl implements CurrencyService, Serializable {
             CurrencyDto ratesDB = requestFromDB();
             List<CurrencyRate> rates = null;
             if (ratesDB == null) {
-                rates = requestRemote(ADD);
+                rates = requestRemote();
             } else {
                 rates = ratesDB.getRates();
                 if (!isValid(rates)) {
                     currencyDao.remove(ratesDB);
-                    rates = requestRemote(ADD);
+                    rates = requestRemote();
                 }
                 this.list = rates;
                 this.date = ratesDB.getDate();
                 if (isOld()) {
-                    rates = requestRemote(UPDATE);
+                    rates = requestRemote();
                 }
             }
             this.list = rates;
@@ -89,6 +89,7 @@ public class CurrencyServiceImpl implements CurrencyService, Serializable {
      * @return CurrencyRates from DB
      */
     CurrencyDto requestFromDB(){
+        errorService.clearMessage("DATABASE");
         LOG.info(LogEvent.create(SERVICE_NAME, "Request data from DB"));
         try {
             CurrencyDto dto = currencyDao.getCurrency();
@@ -103,23 +104,23 @@ public class CurrencyServiceImpl implements CurrencyService, Serializable {
 
     /**
      * Request CurrencyRates from remote service
-     * @param action what to do with requested Rates
      * @return List<CurrencyRate>
      */
-    List<CurrencyRate> requestRemote(String action) {
+    List<CurrencyRate> requestRemote() {
         LOG.info(LogEvent.create(SERVICE_NAME, "Request data from remote service"));
-        List<CurrencyRate> rates = bankParser.getCurrency();
-        this.list = rates;
-        this.date = LocalDate.now();
+        try {
+            List<CurrencyRate> rates = bankParser.getCurrency();
+            this.list = rates;
+            this.date = LocalDate.now();
 
-        if (rates != null){
-            CurrencyDto newDto = new CurrencyDto(this.list, this.date);
-            if (action.equals(ADD)) {
-                currencyDao.addCurrency(newDto);
-            }
-            if (action.equals(UPDATE)) {
+            if (rates != null) {
+                CurrencyDto newDto = new CurrencyDto(this.list, this.date);
                 currencyDao.update(newDto);
             }
+        } catch (MongoException e) {
+            Error error = new Error(SERVICE_NAME, "Error when connect to DB - " + e.toString(), e);
+            LOG.error(error.toString());
+            errorService.error(error);
         }
         return this.list;
     }

@@ -31,8 +31,6 @@ public class DashboardForm extends Weather {
     private static final String SERVICE_NAME = "DASHBOARD";
     private static final String SERVICE_WEATHER = "WEATHER";
     private static final String SERVICE_CURRENCY = "CURRENCY";
-//    ProgressBar progressBar = new ProgressBar();
-
 
     public DashboardForm(){
         currencyTable.setItems(currencyService.getEmptyCurrency());
@@ -52,18 +50,15 @@ public class DashboardForm extends Weather {
         tomorrowWeather.setValue(TOMORROW_WEATHER + w.getTomorrowWeather());
 
         updateWeather.addClickListener(e -> {
-//            scheduleTask();
             errorService.clearMessage(SERVICE_WEATHER);
             updateWeather();
         });
 
-        updateCurency.addClickListener(e -> {
-//            scheduleTask();
+        updateCurrency.addClickListener(e -> {
             errorService.clearMessage(SERVICE_CURRENCY);
             updateCurrency();
 
         });
-//        updateErrors();
     }
 
     public void getDashBoard(String ip){
@@ -72,7 +67,6 @@ public class DashboardForm extends Weather {
         updateCount();
         updateCurrency();
         updateWeather();
-        updateErrors();
     }
 
     private void updateWeather(){
@@ -105,28 +99,5 @@ public class DashboardForm extends Weather {
         Date date = new Date();
         return dateFormat.format(date);
     }
-
-//    protected void scheduleTask() {
-//        Thread t = new Thread() {
-//
-//            @Override
-//            public void run() {
-//                getUI().access(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        updateProgressBar(50);
-//                    }
-//                });
-//            }
-//        };
-//        ScheduledExecutorService worker = Executors
-//                .newSingleThreadScheduledExecutor();
-//        worker.schedule(t, 1, TimeUnit.SECONDS);
-//    }
-//
-//    public void updateProgressBar(int pc) {
-//
-////        progressBar.setValue((float) (pc / 100.0));
-//    }
 
 }

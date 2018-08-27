@@ -14,11 +14,12 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class BankParser {
+public class BankParser implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(BankParser.class);
     private static BankParser instance;

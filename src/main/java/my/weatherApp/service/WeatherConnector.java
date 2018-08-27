@@ -153,6 +153,7 @@ public class WeatherConnector {
                 appID = KEY + varKey;
             }
             ready = true;
+            LOG.info(LogEvent.create(SERVICE_NAME, "Load properties successfully"));
         } catch (IOException|NullPointerException|InvalidServiceException e) {
             String msg = "Error to read weather properties: " + e.toString();
             Error error = new Error(SERVICE_NAME, msg, e);

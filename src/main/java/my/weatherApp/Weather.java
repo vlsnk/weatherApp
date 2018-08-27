@@ -35,7 +35,7 @@ public class Weather extends FormLayout {
     protected Panel currencyBoard;
     protected Label currencyHeader;
     protected Grid<my.weatherApp.model.CurrencyRate> currencyTable;
-    protected NativeButton updateCurency;
+    protected NativeButton updateCurrency;
     protected Panel visitBoard;
     protected Label visitHeader;
     protected Label counter;

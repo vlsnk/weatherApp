@@ -64,6 +64,13 @@ public class CurrencyDaoImpl implements CurrencyDao, Serializable {
     }
 
     @Override
+    public void addCurrency(CurrencyRate currencyRate, LocalDate date) {
+        if (!ready) throw new MongoException("Database is not connect");
+        Document doc = getDoc(currencyRate, date);
+        collection.insertOne(doc);
+    }
+
+    @Override
     public CurrencyDto getCurrency() throws MongoSecurityException {
         if (!ready) throw new MongoException("Database is not connect");
 
@@ -86,8 +93,13 @@ public class CurrencyDaoImpl implements CurrencyDao, Serializable {
         LocalDate date = currencyDto.getDate();
         for (CurrencyRate c : currencyDto.getRates()) {
             Document d = new Document(SALE, c.getSalePrice()).append(BUY, c.getByuPrice()).append(DATE, date.toString());
-            collection.updateOne(eq(ID, c.getName()), new Document(DB_SET, d));
+            Document result = (Document) collection.findOneAndUpdate(new Document(ID, c.getName()), new Document(DB_SET,d));
+            if (result == null){
+                addCurrency(c, date);
+            }
         }
+
+
     }
 
     @Override

@@ -18,8 +18,8 @@ public class CurrencyRate implements Serializable {
         this.name = name;
         if (name.equalsIgnoreCase(Currency.USD.toString())) this.code = "840";
         if (name.equalsIgnoreCase(Currency.EUR.toString())) this.code = "978";
-        this.byuPrice = byuPrice + RUB ;
-        this.salePrice = salePrice + RUB;
+        this.byuPrice = byuPrice;
+        this.salePrice = salePrice;
     }
 
     public CurrencyRate(String name) {

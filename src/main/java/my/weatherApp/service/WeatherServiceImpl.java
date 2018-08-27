@@ -26,9 +26,6 @@ public class WeatherServiceImpl implements WeatherService {
     private WeatherConnector weatherConnector;
     private static final String SERVICE_NAME = "WEATHER";
 
-    private final static String ERR_WEATHER_SERVICE_DISCONNECT =
-            "Weather service is unavailable! please, try again later";
-
     private WeatherServiceImpl(){
         weatherDao = WeatherDaoImpl.getInstance();
         errorService = ErrorService.getInstance();
@@ -76,6 +73,7 @@ public class WeatherServiceImpl implements WeatherService {
      * @return Weather from DB
      */
     Weather requestFromDB(City city) {
+        errorService.clearMessage("DATABASE");
         LOG.info(LogEvent.create(SERVICE_NAME, "Request data from DB"));
         Weather weather = null;
         try {
@@ -104,10 +102,7 @@ public class WeatherServiceImpl implements WeatherService {
             Weather newWeather = WeatherParser.getWeather(weatherObj, forecastObj);
             if (newWeather != null){
                 weatherMap.put(city, newWeather);
-                if (w == null) weatherDao.addWeather(newWeather);
-                else {
-                    weatherDao.update(newWeather);
-                }
+                weatherDao.update(newWeather);
                 return weatherMap.get(city);
             }
 

@@ -46,6 +46,7 @@ public class ErrorService implements ErrorHandler {
      */
     public void clearMessage(String service) {
         this.errors.remove(service);
+        this.errors.remove(APPLICATION);
         fillError();
     }
 
@@ -79,6 +80,8 @@ public class ErrorService implements ErrorHandler {
             sbLabel.append(error.getKey() + " service is unavailable " + "\n");
         }
         label.setValue(sbLabel.toString());
-        LOG.error(LogEvent.create("CURRENT ERRORS", sbLog.toString()));
+        String logMsg = sbLog.toString();
+        if (errors.isEmpty()) logMsg = "no errors";
+        LOG.error(LogEvent.create("CURRENT ERRORS", logMsg));
     }
 }

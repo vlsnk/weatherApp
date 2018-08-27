@@ -19,7 +19,7 @@ public class WeatherDaoImpl implements WeatherDao, Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(CurrencyDaoImpl.class);
     private static final String SERVICE_NAME = "DATABASE";
-    static WeatherDaoImpl instance;
+    private static WeatherDaoImpl instance;
     private static final String NAME = "weather";
     private static final String ID = "_id";
     private static final String TODAY = "today";
@@ -74,10 +74,13 @@ public class WeatherDaoImpl implements WeatherDao, Serializable {
     public void update(Weather weather) {
         if (!ready) throw new MongoException("Database is not connect");
 
-        collection.updateOne(eq(ID, weather.getCity()),
+        Document d = (Document) collection.findOneAndUpdate(new Document(ID, weather.getCity()),
                 new Document("$set", new Document(TODAY, weather.getTodayWeather())
                                                 .append(TOMORROW, weather.getTomorrowWeather())
                                                 .append(UPDATE, weather.getLastUpdate().toString())));
+        if (d == null){
+            addWeather(weather);
+        }
     }
 
     Document getDoc(Weather w){
