@@ -1,5 +1,6 @@
 package my.weatherApp.service;
 
+import com.mongodb.MongoException;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
 import my.weatherApp.dao.CurrencyDao;
@@ -7,6 +8,7 @@ import my.weatherApp.dao.CurrencyDaoImpl;
 import my.weatherApp.model.Currency;
 import my.weatherApp.model.CurrencyDto;
 import my.weatherApp.model.CurrencyRate;
+import my.weatherApp.model.Error;
 import my.weatherApp.model.LogEvent;
 
 import java.io.Serializable;
@@ -25,7 +27,7 @@ public class CurrencyServiceImpl implements CurrencyService, Serializable {
     private static final String UPDATE = "UPDATE";
     private static final String SERVICE_NAME = "CURRENCY";
     private BankParser bankParser;
-
+    private ErrorService errorService = ErrorService.getInstance();
 
     private CurrencyServiceImpl() {
         LOG.info(LogEvent.create(SERVICE_NAME, "Create CurrencyServiceImpl"));
@@ -46,8 +48,26 @@ public class CurrencyServiceImpl implements CurrencyService, Serializable {
     @Override
     public List<CurrencyRate> getCurrency() {
         if (this.list == null || isOld()) {
-            List<CurrencyRate> newRates = requestFromDB();
-            return newRates;
+            CurrencyDto ratesDB = requestFromDB();
+            List<CurrencyRate> rates = null;
+            if (ratesDB == null) {
+                rates = requestRemote(ADD);
+            } else {
+                rates = ratesDB.getRates();
+                if (!isValid(rates)) {
+                    currencyDao.remove(ratesDB);
+                    rates = requestRemote(ADD);
+                }
+                this.list = rates;
+                this.date = ratesDB.getDate();
+                if (isOld()) {
+                    rates = requestRemote(UPDATE);
+                }
+            }
+            this.list = rates;
+            if (rates == null) {
+                return getEmptyCurrency();
+            }
         }
         return this.list;
     }
@@ -66,28 +86,19 @@ public class CurrencyServiceImpl implements CurrencyService, Serializable {
 
     /**
      *
-     * @return CurrencyRates from DB or request it from remote service
+     * @return CurrencyRates from DB
      */
-    List<CurrencyRate> requestFromDB(){
+    CurrencyDto requestFromDB(){
         LOG.info(LogEvent.create(SERVICE_NAME, "Request data from DB"));
-        CurrencyDto dto = currencyDao.getCurrency();
-        List<CurrencyRate> rates;
-        if (dto == null) {
-            rates = requestNewRates(ADD);
-        } else {
-            rates = dto.getRates();
-
-            if (!isValid(rates)) {
-                currencyDao.remove(dto);
-                rates = requestNewRates(ADD);
-            }
-            if (isOld()) {
-                rates = requestNewRates(UPDATE);
-            }
-            this.date = dto.getDate();
-            this.list = rates;
+        try {
+            CurrencyDto dto = currencyDao.getCurrency();
+            return dto;
+        } catch (MongoException m) {
+            my.weatherApp.model.Error error = new Error(SERVICE_NAME, m.toString(), m);
+            LOG.error(error.toString());
+            errorService.error(error);
         }
-        return rates;
+        return null;
     }
 
     /**
@@ -95,16 +106,13 @@ public class CurrencyServiceImpl implements CurrencyService, Serializable {
      * @param action what to do with requested Rates
      * @return List<CurrencyRate>
      */
-    List<CurrencyRate> requestNewRates(String action) {
+    List<CurrencyRate> requestRemote(String action) {
         LOG.info(LogEvent.create(SERVICE_NAME, "Request data from remote service"));
         List<CurrencyRate> rates = bankParser.getCurrency();
-        if (rates == null) {
-            LOG.error(LogEvent.create(SERVICE_NAME, "Error to request data from remote service"));
+        this.list = rates;
+        this.date = LocalDate.now();
 
-            return getEmptyCurrency();
-        } else {
-            this.list = rates;
-            this.date = LocalDate.now();
+        if (rates != null){
             CurrencyDto newDto = new CurrencyDto(this.list, this.date);
             if (action.equals(ADD)) {
                 currencyDao.addCurrency(newDto);
@@ -112,8 +120,8 @@ public class CurrencyServiceImpl implements CurrencyService, Serializable {
             if (action.equals(UPDATE)) {
                 currencyDao.update(newDto);
             }
-            return this.list;
         }
+        return this.list;
     }
 
     /**

@@ -1,5 +1,6 @@
 package my.weatherApp.dao;
 
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.vaadin.external.org.slf4j.Logger;
@@ -51,12 +52,16 @@ public class WeatherDaoImpl implements WeatherDao, Serializable {
 
     @Override
     public void addWeather(Weather weather) {
+        if (!ready) throw new MongoException("Database is not connect");
+
         Document weatherDB = getDoc(weather);
         collection.insertOne(weatherDB);
     }
 
     @Override
     public Weather getWeather(City city) {
+        if (!ready) throw new MongoException("Database is not connect");
+
         Document d = (Document) collection.find(eq(ID, city.getCode())).first();
         if (d == null){
             return null;
@@ -67,6 +72,8 @@ public class WeatherDaoImpl implements WeatherDao, Serializable {
 
     @Override
     public void update(Weather weather) {
+        if (!ready) throw new MongoException("Database is not connect");
+
         collection.updateOne(eq(ID, weather.getCity()),
                 new Document("$set", new Document(TODAY, weather.getTodayWeather())
                                                 .append(TOMORROW, weather.getTomorrowWeather())
@@ -78,7 +85,6 @@ public class WeatherDaoImpl implements WeatherDao, Serializable {
                 .append(TODAY, w.getTodayWeather())
                 .append(TOMORROW, w.getTomorrowWeather())
                 .append(UPDATE, w.getLastUpdate().toString());
-        System.out.println(weatherDB);
         return weatherDB;
     }
 

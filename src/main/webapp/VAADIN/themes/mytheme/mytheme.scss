@@ -55,6 +55,29 @@
     color: #b13028;
   }
 
+  .v-grid-16 {
+    //font-size: 16px;
+    //position: absolute;
+    //overflow: hidden;
+    //box-sizing: border-box;
+    //z-index: 5;
+    border: 1px solid #d4d4d4;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    position: relative;
+    background: #fafafa;
+    color: #464646;
+    overflow: hidden;
+    font-family: ThemeIcons;
+    font: inherit;
+  }
+  //.v-grid-16 > table {
+  //  border-spacing: 0;
+  //  table-layout: fixed;
+  //  width: inherit;
+
   .v-panel-translucent {
     background: rgba(202, 233, 239, 0.41);
     color: #474747;

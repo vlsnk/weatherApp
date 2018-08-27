@@ -49,7 +49,13 @@ public class WeatherServiceImpl implements WeatherService {
     public Weather getWeather(City city) {
         if (!weatherMap.containsKey(city) || isOld(weatherMap.get(city))){
             Weather w = requestFromDB(city);
-            return w;
+            if (w == null || isOld(w)) {
+                w = requestRemote(city);
+                if (w == null) {
+                    return getEmptyWeather();
+                }
+            }
+            weatherMap.put(city, w);
         }
         return weatherMap.get(city);
 
@@ -67,62 +73,61 @@ public class WeatherServiceImpl implements WeatherService {
     /**
      *
      * @param city
-     * @return Weather from DB or request it from remote service
+     * @return Weather from DB
      */
     Weather requestFromDB(City city) {
         LOG.info(LogEvent.create(SERVICE_NAME, "Request data from DB"));
+        Weather weather = null;
         try {
-            Weather weather = weatherDao.getWeather(city);
-
-            if (weather == null || isOld(weather)) {
-
-                LOG.info(LogEvent.create(SERVICE_NAME, "Request data from remote service"));
-                JSONObject weatherObj = weatherConnector.requestWeather(city.getCode());
-                JSONObject forecastObj = weatherConnector.requestForecast(city.getCode());
-                if (weatherObj == null || forecastObj == null){
-                    return getEmptyWeather();
-                }
-                Weather newWeather = WeatherParser.getWeather(weatherObj, forecastObj);
-                if (newWeather == null) {
-                    return getEmptyWeather();
-                } else {
-                    if (weather == null) weatherDao.addWeather(newWeather);
-                    else weatherDao.update(newWeather);
-                }
-            }
-            weatherMap.put(city, weather);
-            return weatherMap.get(city);
-        } catch (IOException|JSONException|NullPointerException e) {
-            Error error = new Error(SERVICE_NAME, "Error to request data from remote service - " + e.toString(), e);
-            errorService.error(error);
-            LOG.error(error.toString());
-
+            weather = weatherDao.getWeather(city);
         } catch (MongoException e) {
             Error error = new Error(SERVICE_NAME, "Error to request data from DB - " + e.toString(), e);
             LOG.error(error.toString());
             errorService.error(error);
+        }
+        return weather;
+    }
+
+    /**
+     * Request weather from remote service
+     * @param city
+     */
+    private Weather requestRemote(City city){
+        Weather w = null;
+        try {
+            LOG.info(LogEvent.create(SERVICE_NAME, "Request data from remote service"));
+            JSONObject weatherObj = weatherConnector.requestWeather(city.getCode());
+            JSONObject forecastObj = weatherConnector.requestForecast(city.getCode());
+            if (weatherObj == null || forecastObj == null){
+                return w;
+            }
+            Weather newWeather = WeatherParser.getWeather(weatherObj, forecastObj);
+            if (newWeather != null){
+                weatherMap.put(city, newWeather);
+                if (w == null) weatherDao.addWeather(newWeather);
+                else {
+                    weatherDao.update(newWeather);
+                }
+                return weatherMap.get(city);
+            }
+
+        } catch (IOException|JSONException|NullPointerException e){
+            Error error = new Error(SERVICE_NAME, "Error to request data from remote service - " + e.toString(), e);
+            errorService.error(error);
+            LOG.error(error.toString());
         } catch (InvalidServiceException e) {
             String msg = "Error to request weather - " + e.toString();
             Error error = new Error(SERVICE_NAME, msg, e);
-            errorService.error(error);
             LOG.error(error.toString());
+            errorService.error(error);
+        } catch (MongoException e) {
+            Error error = new Error(SERVICE_NAME, "Error when connect to DB - " + e.toString(), e);
+            LOG.error(error.toString());
+            errorService.error(error);
+            return weatherMap.get(city);
         }
-        return getEmptyWeather();
+        return w;
     }
-
-//    /**
-//     * Check if Weather for city from weatherMap is old or not
-//     * @param city
-//     * @return
-//     */
-//    boolean isOld(City city){
-//        LocalDateTime now = LocalDateTime.now().minusHours(1);
-//        LocalDateTime lastUpdate = weatherMap.get(city).getLastUpdate();
-//        if (now.isAfter(lastUpdate)){
-//            return true;
-//        }
-//        return false;
-//    }
 
     /**
      * Check if Weather is old or not

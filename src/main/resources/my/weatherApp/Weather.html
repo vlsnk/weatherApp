@@ -6,7 +6,7 @@
   <meta name="vaadin-version" content="8.1.5">
  </head>
  <body>
-  <vaadin-form-layout primary-style-name="mytheme" size-auto>
+  <vaadin-form-layout primary-style-name="mytheme" style-name="formLayout" width="998px" height="471px">
    <vaadin-grid-layout spacing size-full margin _id="gridLayout">
     <row>
      <column></column>
@@ -37,19 +37,27 @@
       </vaadin-panel>
      </column>
      <column>
-      <vaadin-panel primary-style-name="v-panel-translucent" width="280px" height="290px" _id="currencyBoard" :middle :center>
+      <vaadin-panel primary-style-name="v-panel-translucent" width="300px" height="290px" _id="currencyBoard" :middle :center>
        <vaadin-vertical-layout height="90%">
         <vaadin-label style-name="h3" height="26px" plain-text _id="currencyHeader" :middle :center :expand>
           Курс валют 
         </vaadin-label>
-        <vaadin-grid caption-as-html column-resize-mode="simple" header-visible="false" width-full height="77px" data-item-type="my.weatherApp.model.CurrencyRate" selection-mode="none" _id="currencyTable" :center :expand>
+        <vaadin-grid caption-as-html column-resize-mode="simple" primary-style-name="v-grid-16" header-visible="false" width-full height="120px" data-item-type="my.weatherApp.model.CurrencyRate" selection-mode="none" _id="currencyTable" :center :expand>
          <table>
           <colgroup>
-           <col column-id="name" sortable>
-           <col column-id="byuPrice" sortable>
-           <col column-id="salePrice" sortable>
+           <col column-id="name" sortable="false">
+           <col column-id="code" sortable="false">
+           <col column-id="byuPrice" sortable="false">
+           <col column-id="salePrice" sortable="false">
           </colgroup>
-          <thead></thead>
+          <thead>
+           <tr default>
+            <th plain-text column-ids="name">Валюта</th>
+            <th plain-text column-ids="code">Код</th>
+            <th plain-text column-ids="byuPrice">Покупка</th>
+            <th plain-text column-ids="salePrice">Продажа</th>
+           </tr>
+          </thead>
           <tbody></tbody>
          </table>
         </vaadin-grid>

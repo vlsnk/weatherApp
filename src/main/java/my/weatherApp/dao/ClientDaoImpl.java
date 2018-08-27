@@ -1,6 +1,8 @@
 package my.weatherApp.dao;
 
 import static com.mongodb.client.model.Filters.eq;
+
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
@@ -35,17 +37,17 @@ public class ClientDaoImpl implements ClientDao, Serializable {
         return instance;
     }
 
-    private void init(){
-        Document d = (Document) collection.find().first();
-        if (d == null) {
-            addVisitor(new Visitor());
-        }
-    }
+//    private void init(){
+//        Document d = (Document) collection.find().first();
+//        if (d == null) {
+//            addVisitor(new Visitor());
+//        }
+//    }
 
     public void setDB(MongoDatabase mongoDatabase){
         this.collection = mongoDatabase.getCollection(NAME);
         collection.find();
-        init();
+//        init();
         ready = true;
     }
 
@@ -57,12 +59,17 @@ public class ClientDaoImpl implements ClientDao, Serializable {
     @Override
     @SuppressWarnings("unchecked")
     public void addVisitor(Visitor visitor) {
+        if (!ready) {
+
+            throw new MongoException("Database is not connect");
+        }
         Document visitorDB = getDoc(visitor);
         collection.insertOne(visitorDB);
     }
 
     @Override
     public Visitor getVisitor() {
+        if (!ready) throw new MongoException("Database is not connect");
         Document result = (Document) collection.findOneAndUpdate(new Document(ID, 1),
                 new Document(INC, new Document(COUNT, 1)));
         if (result == null){
@@ -81,6 +88,7 @@ public class ClientDaoImpl implements ClientDao, Serializable {
     }
 
     private Visitor getVisitor(Document doc){
+        if (!ready) throw new MongoException("Database is not connect");
         Visitor visitor = new Visitor(doc.getInteger(COUNT, 1));
         return visitor;
     }

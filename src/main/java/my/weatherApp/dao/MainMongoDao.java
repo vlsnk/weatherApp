@@ -16,11 +16,11 @@ public class MainMongoDao implements MainDao {
     private static MainMongoDao instance;
     private static final Logger LOG = LoggerFactory.getLogger(MainMongoDao.class);
     private static final String CONNECTION_TIME_OUT_MS = "CONNECTION_TIME_OUT_MS";
-    private static int connectionTimeout = 10_000;
+    private static int connectionTimeout = 10;
     private static final String SOCKET_TIME_OUT_MS = "SOCKET_TIME_OUT_MS";
     private static int socketTimeout = 0;
     private static final String SERVER_SELECTION_TIMEOUT_MS = "SERVER_SELECTION_TIMEOUT_MS";
-    private static int serverSelectionTimeout = 30_000;
+    private static int serverSelectionTimeout = 30;
     private static final String USERNAME = "USERNAME";
     private static String user = null;
     private static final String PASSWORD = "PASSWORD";

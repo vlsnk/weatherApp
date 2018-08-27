@@ -7,6 +7,7 @@ public class CurrencyRate implements Serializable {
     private final static String RUB = "\u0584";
     private final static String def = "-";
     private String name;
+    private String code;
     private String byuPrice;
     private String salePrice;
 
@@ -15,12 +16,16 @@ public class CurrencyRate implements Serializable {
 
     public CurrencyRate(String name, String byuPrice, String salePrice) {
         this.name = name;
+        if (name.equalsIgnoreCase(Currency.USD.toString())) this.code = "840";
+        if (name.equalsIgnoreCase(Currency.EUR.toString())) this.code = "978";
         this.byuPrice = byuPrice + RUB ;
         this.salePrice = salePrice + RUB;
     }
 
     public CurrencyRate(String name) {
         this.name = name;
+        if (name.equalsIgnoreCase(Currency.USD.toString())) this.code = "840";
+        if (name.equalsIgnoreCase(Currency.EUR.toString())) this.code = "978";
         this.byuPrice = def + RUB ;
         this.salePrice = def + RUB;
     }
@@ -31,6 +36,8 @@ public class CurrencyRate implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+        if (name.equalsIgnoreCase(Currency.USD.toString())) this.code = "840";
+        if (name.equalsIgnoreCase(Currency.EUR.toString())) this.code = "978";
     }
 
     public String getByuPrice() {
@@ -38,7 +45,7 @@ public class CurrencyRate implements Serializable {
     }
 
     public void setByuPrice(String byuPrice) {
-        this.byuPrice = byuPrice;
+        this.byuPrice = byuPrice + RUB;
     }
 
     public String getSalePrice() {
@@ -46,7 +53,15 @@ public class CurrencyRate implements Serializable {
     }
 
     public void setSalePrice(String salePrice) {
-        this.salePrice = salePrice;
+        this.salePrice = salePrice + RUB;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Override

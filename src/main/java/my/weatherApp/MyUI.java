@@ -43,7 +43,7 @@ public class MyUI extends UI {
     }
 
     @WebServlet(urlPatterns = { "/*", "/VAADIN/*" }, name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
+    @VaadinServletConfiguration(ui = MyUI.class, productionMode = true)
     public static class MyUIServlet extends VaadinServlet {
 
         private static final Logger LOG = LoggerFactory.getLogger(MyUIServlet.class);

@@ -12522,6 +12522,20 @@ div.v-layout.v-horizontal.v-widget {
 	color: #b13028;
 }
 
+.mytheme .v-grid-16 {
+	border: 1px solid #d4d4d4;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
+	position: relative;
+	background: #fafafa;
+	color: #464646;
+	overflow: hidden;
+	font-family: ThemeIcons;
+	font: inherit;
+}
+
 .mytheme .v-panel-translucent {
 	background: rgba(202, 233, 239, 0.41);
 	color: #474747;

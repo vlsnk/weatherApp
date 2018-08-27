@@ -4,6 +4,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.data.HasValue;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
+import com.vaadin.ui.ProgressBar;
 import my.weatherApp.model.City;
 import my.weatherApp.model.CurrencyRate;
 import my.weatherApp.model.Visitor;
@@ -13,6 +14,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 
 @Theme("mytheme")
 public class DashboardForm extends Weather {
@@ -29,6 +31,7 @@ public class DashboardForm extends Weather {
     private static final String SERVICE_NAME = "DASHBOARD";
     private static final String SERVICE_WEATHER = "WEATHER";
     private static final String SERVICE_CURRENCY = "CURRENCY";
+//    ProgressBar progressBar = new ProgressBar();
 
 
     public DashboardForm(){
@@ -49,27 +52,30 @@ public class DashboardForm extends Weather {
         tomorrowWeather.setValue(TOMORROW_WEATHER + w.getTomorrowWeather());
 
         updateWeather.addClickListener(e -> {
+//            scheduleTask();
             errorService.clearMessage(SERVICE_WEATHER);
             updateWeather();
         });
 
         updateCurency.addClickListener(e -> {
+//            scheduleTask();
             errorService.clearMessage(SERVICE_CURRENCY);
             updateCurrency();
+
         });
-        errorService.fillError();
+//        updateErrors();
     }
 
-    void getDashBoard(String ip){
+    public void getDashBoard(String ip){
         ipInfo.setValue(IP + ip);
         dateInfo.setValue(DATE + getDate());
         updateCount();
         updateCurrency();
         updateWeather();
-        errorService.fillError();
+        updateErrors();
     }
 
-    void updateWeather(){
+    private void updateWeather(){
         String s = cityName.getSelectedItem().get();
         City n = City.getCity(s);
         my.weatherApp.model.Weather w = weatherService.getWeather(n);
@@ -78,25 +84,49 @@ public class DashboardForm extends Weather {
         updateErrors();
     }
 
-    void updateCurrency(){
+    private void updateCurrency(){
         List<CurrencyRate> rate = currencyService.getCurrency();
         currencyTable.setItems(rate);
         updateErrors();
     }
 
-    void updateCount(){
+    private void updateCount(){
         Visitor v = visitorService.getInfo();
         int result = v.getCount();
         counter.setValue(String.valueOf(result));
     }
 
-    void updateErrors(){
+    private void updateErrors(){
         errorService.fillError();
     }
 
-    String getDate(){
+    private String getDate(){
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         Date date = new Date();
         return dateFormat.format(date);
     }
+
+//    protected void scheduleTask() {
+//        Thread t = new Thread() {
+//
+//            @Override
+//            public void run() {
+//                getUI().access(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        updateProgressBar(50);
+//                    }
+//                });
+//            }
+//        };
+//        ScheduledExecutorService worker = Executors
+//                .newSingleThreadScheduledExecutor();
+//        worker.schedule(t, 1, TimeUnit.SECONDS);
+//    }
+//
+//    public void updateProgressBar(int pc) {
+//
+////        progressBar.setValue((float) (pc / 100.0));
+//    }
+
 }

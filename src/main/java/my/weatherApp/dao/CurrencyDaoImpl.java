@@ -1,5 +1,6 @@
 package my.weatherApp.dao;
 
+import com.mongodb.MongoException;
 import com.mongodb.MongoSecurityException;
 import com.mongodb.client.*;
 import com.vaadin.external.org.slf4j.Logger;
@@ -53,6 +54,8 @@ public class CurrencyDaoImpl implements CurrencyDao, Serializable {
 
     @Override
     public void addCurrency(CurrencyDto currencyDto) {
+        if (!ready) throw new MongoException("Database is not connect");
+
         List<Document> documents = new ArrayList<>();
         for (CurrencyRate c : currencyDto.getRates()) {
             documents.add(getDoc(c, currencyDto.getDate()));
@@ -62,6 +65,8 @@ public class CurrencyDaoImpl implements CurrencyDao, Serializable {
 
     @Override
     public CurrencyDto getCurrency() throws MongoSecurityException {
+        if (!ready) throw new MongoException("Database is not connect");
+
         List<CurrencyRate> currencyRates = new ArrayList<>();
         MongoCursor list = collection.find().iterator();
         String date = null;
@@ -76,6 +81,8 @@ public class CurrencyDaoImpl implements CurrencyDao, Serializable {
 
     @Override
     public void update(CurrencyDto currencyDto) {
+        if (!ready) throw new MongoException("Database is not connect");
+
         LocalDate date = currencyDto.getDate();
         for (CurrencyRate c : currencyDto.getRates()) {
             Document d = new Document(SALE, c.getSalePrice()).append(BUY, c.getByuPrice()).append(DATE, date.toString());
@@ -85,6 +92,8 @@ public class CurrencyDaoImpl implements CurrencyDao, Serializable {
 
     @Override
     public void remove(CurrencyDto currencyDto) {
+        if (!ready) throw new MongoException("Database is not connect");
+
         collection.deleteMany(new Document());
     }
 
