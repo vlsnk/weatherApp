@@ -75,12 +75,6 @@
 			<artifactId>json</artifactId>
 			<version>20080701</version>
 		</dependency>
-		<!--<dependency>-->
-			<!--<groupId>javax.servlet</groupId>-->
-			<!--<artifactId>javax.servlet-api</artifactId>-->
-			<!--<version>3.0.1</version>-->
-			<!--<scope>provided</scope>-->
-		<!--</dependency>-->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
@@ -140,15 +134,6 @@
 					</filesets>
 				</configuration>
 			</plugin>
-			<!--<plugin>-->
-				<!--<groupId>org.eclipse.jetty</groupId>-->
-				<!--<artifactId>jetty-maven-plugin</artifactId>-->
-				<!--<version>${jetty.plugin.version}</version>-->
-				<!--<configuration>-->
-					<!--<scanIntervalSeconds>2</scanIntervalSeconds>-->
-				<!--</configuration>-->
-			<!--</plugin>-->
-
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.5.1</version>
@@ -157,25 +142,6 @@
 					<target>${maven.compiler.target}</target>
 				</configuration>
 			</plugin>
-			<!--<plugin>-->
-				<!--<groupId>org.codehaus.mojo</groupId>-->
-				<!--<artifactId>build-helper-maven-plugin</artifactId>-->
-                <!--<version>3.0.0</version>-->
-				<!--<executions>-->
-					<!--<execution>-->
-						<!--<id>reserve-network-port</id>-->
-						<!--<goals>-->
-							<!--<goal>reserve-network-port</goal>-->
-						<!--</goals>-->
-						<!--&lt;!&ndash;<phase>pre-integration-test</phase>&ndash;&gt;-->
-						<!--<configuration>-->
-							<!--<portNames>-->
-								<!--<portName>maven.tomcat.port</portName>-->
-							<!--</portNames>-->
-						<!--</configuration>-->
-					<!--</execution>-->
-				<!--</executions>-->
-			<!--</plugin>-->
 		</plugins>
 	</build>
 
